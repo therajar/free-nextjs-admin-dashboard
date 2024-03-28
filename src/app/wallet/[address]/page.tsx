@@ -3,6 +3,8 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import useApiData from '@/hooks/useApiData';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { useEffect } from 'react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 // Define interface for token data
 interface Token {
@@ -14,15 +16,35 @@ interface Token {
   [key: string]: string; // Index signature allowing any string keys with string values
 }
 
+
+// Define interface for Account data
+interface Account {
+    ticker: string;
+    balance: string;
+    username: string;
+    txCount: number;
+    isGuarded: boolean;
+    }
+
+
 export default function Page({ params }: { params: { address: string } }) {
   const { address } = params;
   const tokensUrl = 'https://api.multiversx.com/accounts/' + address + '/tokens';
 
+  const accountsUrl = 'https://api.multiversx.com/accounts/' + address ;
+
+
   // Fetch data from API
   const { data: tokensData, isLoading: isLoadingTokens, error: tokensError } = useApiData(tokensUrl);
+  const { data: AccountData, isLoading: isLoadingAccount, error: AccountError } = useApiData(accountsUrl);
+
+
+
 
   // Process tokenList here
   const tokenList: Token[] = tokensData || [];
+  const AccountDetail: Account[] = AccountData || [];
+
 
   // Columns for the table
   const columnsData = [
@@ -47,31 +69,23 @@ export default function Page({ params }: { params: { address: string } }) {
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-242.5">
-        <Breadcrumb pageName="Wallet" />
+   
 
-        {/* Navigation links for Tokens, NFTs, and History */}
-        <div className="shared__HStack-sc-1qg837v-1 iiBdOd" style={{ position: 'relative' }}>
-          <div>
-            <div className="_3vBBQ _2PxSm">
-              <div className="shared__HStack-sc-1qg837v-1 gvaYhZ" style={{ gridTemplateColumns: 'repeat(3, minmax(60px, 1fr))' }}>
-                <a aria-current="page" className="_1TrRb uYYdv" href={`/${address}/overview`} style={{ color: 'var(--primary)' }}>
-                  <div color="currentColor" className="UIText-sc-96tl0y-0 foAgcB">Tokens</div>
-                  <div className="_3DwpY"></div>
-                </a>
-                <a className="uYYdv" href={`/${address}/nfts`} style={{ color: 'currentcolor' }}>
-                  <div color="currentColor" className="UIText-sc-96tl0y-0 foAgcB">NFTs</div>
-                  <div className="_3DwpY"></div>
-                </a>
-                <a className="uYYdv" href={`/${address}/history`} style={{ color: 'currentcolor' }}>
-                  <div color="currentColor" className="UIText-sc-96tl0y-0 foAgcB">History</div>
-                  <div className="_3DwpY"></div>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="_1BCaw" style={{ position: 'absolute', left: '0px', right: '0px', bottom: '0px', zIndex: '-1' }}></div>
+
+
+      <div className="grid-profile">
+        <div className="grid-profile">
+          {/* <!-- Input Fields --> */}
+          {AccountDetail.username}
+          {AccountDetail.txCount}
+        </div>
+        <div className="grid-profile">
+          {/* <!-- Input Fields --> */}
+          {AccountDetail.username}
+          {AccountDetail.txCount}
         </div>
 
+      </div>
 
 
 
@@ -80,7 +94,21 @@ export default function Page({ params }: { params: { address: string } }) {
 
 
 
-        <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+
+
+
+
+
+
+        <Tabs>
+    <TabList>
+      <Tab>Tokens</Tab>
+      <Tab>NFTs</Tab>
+      <Tab>History</Tab>
+    </TabList>
+
+    <TabPanel>
+    <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
             Token List
           </h4>
@@ -145,6 +173,17 @@ export default function Page({ params }: { params: { address: string } }) {
             </div>
           )}
         </div>
+    </TabPanel>
+    <TabPanel>
+      <h2>Any content 2</h2>
+    </TabPanel>
+    <TabPanel>
+      <h2>Any content 2</h2>
+    </TabPanel>
+  </Tabs>
+
+
+   
       </div>
     </DefaultLayout>
   );
