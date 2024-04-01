@@ -20,14 +20,18 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ accountData, isLoading 
         return <p>Loading account data...</p>;
     }
 
+const eglbPerEGLD = 10 ** 18; // Number of EGLD units per wei
+
+
     // Show account details if data is available
     if (accountData) {
         return (
             <div className="grid-profile">
-                <div>
-                    <p>Username: {accountData.username}</p>
-                    <p>Transactions Count: {accountData.txCount}</p>
-                </div>
+                <span>
+                 <div className="text-xl font-semibold text-black dark:text-white">{accountData.username}</div>
+                  <div className="text-xl">{(accountData.balance / eglbPerEGLD).toFixed(5)} EGLD</div>
+                  <div>{accountData.txCount} Total Transactions</div>
+                </span>
             </div>
         );
     }
